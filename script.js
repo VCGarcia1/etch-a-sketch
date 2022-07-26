@@ -1,9 +1,20 @@
 const container = document.querySelector('#container');
-const rows = document.createElement(`div`);
-rows.className += ('rows')
-let rowLines=0;
 
-function createGrid(rowLines) {
+function createPage() {
+    const rows = createGrid();
+    const button = document.createElement('button');
+    button.innerText = 'Change Grid Size';
+    container.insertBefore(button, rows);
+    button.addEventListener('click', () => {
+        changeSize()
+    })
+};
+
+
+function createGrid(rowLines=16) {
+    const rows = document.createElement(`div`);
+    rows.className += ('rows')
+
     for (i=1; i<=rowLines; i++){
         const row = document.createElement(`div`);
         row.className += ('row');
@@ -20,13 +31,26 @@ function createGrid(rowLines) {
 
     }
     container.appendChild(rows)
+    return rows
 }
 
-while (rowLines<1 || rowLines>100){
-    rowLines = prompt('What size grid would you like (1-100)')
+function changeSize() {
+    let rows = document.querySelector('.rows')
+    let userResponse = 0;
+    while ((userResponse<1 || userResponse>100) && userResponse!=null){
+        userResponse = prompt('What size grid would you like (1-100)')
+    }
+    if (userResponse == null) {
+        return
+    }else{
+        container.removeChild(rows)
+        createGrid(userResponse)
+    }
+
+
 }
 
-createGrid(rowLines)
+createPage()
 
 
 
