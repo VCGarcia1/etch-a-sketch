@@ -10,6 +10,10 @@ for (i=1; i<=rowLines; i++){
         const square = document.createElement(`div`);
         square.className += ('square');
         row.appendChild(square);
+        square.addEventListener('mouseover', function(event) {
+            square.style.backgroundColor= 'black';
+            console.log('hover')
+        })
     }
     rows.appendChild(row)
 
