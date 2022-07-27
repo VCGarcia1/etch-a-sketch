@@ -1,17 +1,67 @@
-const container = document.querySelector('#container');
+let container = document.querySelector('#container');
+let mode = 'black'
+let rowLines = 16
 
 function createPage() {
+    container.innerText= ''
     const rows = createGrid();
-    const button = document.createElement('button');
-    button.innerText = 'Change Grid Size';
-    container.insertBefore(button, rows);
-    button.addEventListener('click', () => {
+    const buttonSize = document.createElement('button');
+    buttonSize.className+='button-size'
+    buttonSize.innerText = 'Change Grid Size';
+    container.insertBefore(buttonSize, rows);
+    buttonSize.addEventListener('click', () => {
         changeSize()
     })
+
+    createColorButtons()
+
+
 };
 
+function createColorButtons(){
+    let squares = document.querySelectorAll('.square')
+    const buttonColors = document.createElement('div');
+    buttonColors.className+='button-colors';
 
-function createGrid(rowLines=16) {
+    const buttonBlack = document.createElement('button');
+    buttonBlack.className+='button-color';
+    buttonBlack.innerText = 'Black';
+    buttonColors.appendChild(buttonBlack);
+    buttonBlack.addEventListener('click', () => {
+        mode = 'black'
+        createPage()
+    })
+
+    const buttonRainbow = document.createElement('button');
+    buttonRainbow.className+='button-color';
+    buttonRainbow.innerText = 'Rainbow';
+    buttonColors.appendChild(buttonRainbow);
+
+    const buttonModern = document.createElement('button')
+    buttonModern.className+='button-modern'
+    buttonModern.innerText = 'Modern'
+    buttonColors.appendChild(buttonModern)
+
+    container.appendChild(buttonColors);
+
+    buttonBlack.addEventListener('click', () => {
+        mode = 'black'
+        createPage()
+    })
+
+    buttonRainbow.addEventListener('click', () => {
+        mode = 'rainbow'
+        createPage()
+    })
+    
+    buttonModern.addEventListener('click', () => {
+        mode = 'modern'
+        createPage()
+    })
+}
+
+
+function createGrid() {
     const rows = document.createElement(`div`);
     rows.className += ('rows')
 
@@ -23,8 +73,12 @@ function createGrid(rowLines=16) {
             square.className += ('square');
             row.appendChild(square);
             square.addEventListener('mouseover', function(event) {
-                square.style.backgroundColor= 'black';
-                console.log('hover')
+                const color = (mode=='black' || mode=='modern') ? 'black' : getRandomColor()
+                square.style.backgroundColor= color;
+                if (mode=='modern') {
+                    let opacity = this.style.opacity;
+                    this.style.opacity = opacity ? (parseFloat(opacity) + 0.1) : 0.1;
+                }
             })
         }
         rows.appendChild(row)
@@ -32,6 +86,12 @@ function createGrid(rowLines=16) {
     }
     container.appendChild(rows)
     return rows
+}
+
+function getRandomColor() {
+    const colors = ['#760EF4', '#34EBFF', '#00D51B', '#FFED00', '#FB9C01', '#DF3100']
+    const color = colors[Math.floor(Math.random() * 6)]
+    return color
 }
 
 function changeSize() {
@@ -43,10 +103,13 @@ function changeSize() {
     if (userResponse == null) {
         return
     }else{
-        container.removeChild(rows)
-        createGrid(userResponse)
+        rowLines = userResponse
+        createPage()
     }
 
+    function resetPage(){
+
+    }
 
 }
 
